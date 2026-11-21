@@ -41,15 +41,6 @@ namespace nodepp { namespace SIMD { namespace f64 {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) ); 
     }
 
-    /*─······································································─*/
-
-    template< ulong N=2 >
-    inline f64_t shuffle( const f64_t& A, const f64_t& B, uchar (&index)[N] ) {
-        float arr[4]; memcpy( arr+0, A.value, N * sizeof(uchar_64) );
-                      memcpy( arr+N, B.value, N * sizeof(uchar_64) );
-        return map_f64([&]( int x ){ return arr[ index[x] & 0x07 ]; });
-    }
-
 }}}
 
 /*────────────────────────────────────────────────────────────────────────────*/
@@ -90,15 +81,6 @@ namespace nodepp { namespace SIMD { namespace f32 {
 
     inline f32_t select ( const f32_t& mask, const f32_t& v_true, const f32_t& v_false ) { 
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) ); 
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=4 >
-    inline f32_t shuffle( const f32_t& A, const f32_t& B, uchar (&index)[N] ) {
-        float arr[8]; memcpy( arr+0, A.value, N * sizeof(uchar_32) );
-                      memcpy( arr+N, B.value, N * sizeof(uchar_32) );
-        return map_f32([&]( int x ){ return arr[ index[x] & 0x07 ]; });
     }
 
 }}}
@@ -147,15 +129,6 @@ namespace nodepp { namespace SIMD { namespace u64 {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) ); 
     }
 
-    /*─······································································─*/
-
-    template< ulong N=4 >
-    inline u64_t shuffle( const u64_t& A, const u64_t& B, uchar (&index)[N] ) {
-        float arr[8]; memcpy( arr+0, A.value, N * sizeof(uchar_64) );
-                      memcpy( arr+N, B.value, N * sizeof(uchar_64) );
-        return map_u64([&]( int x ){ return arr[ index[x] & 0x07 ]; });
-    }
-
 }}}
 
 /*────────────────────────────────────────────────────────────────────────────*/
@@ -200,15 +173,6 @@ namespace nodepp { namespace SIMD { namespace u32 {
 
     inline u32_t select( const u32_t& mask, const u32_t& v_true, const u32_t& v_false ) { 
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) ); 
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=4 >
-    inline u32_t shuffle( const u32_t& A, const u32_t& B, uchar (&index)[N] ) {
-        float arr[8]; memcpy( arr+0, A.value, N * sizeof(uchar_32) );
-                      memcpy( arr+N, B.value, N * sizeof(uchar_32) );
-        return map_u32([&]( int x ){ return arr[ index[x] & 0x07 ]; });
     }
 
 }}}
@@ -260,15 +224,6 @@ namespace nodepp { namespace SIMD { namespace u16 {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) ); 
     }
 
-    /*─······································································─*/
-
-    template< ulong N=8 >
-    inline u16_t shuffle( const u16_t& A, const u16_t& B, uchar (&index)[N] ) {
-        float arr[16]; memcpy( arr+0, A.value, N * sizeof(uchar_16) );
-                       memcpy( arr+N, B.value, N * sizeof(uchar_16) );
-        return map_u16([&]( int x ){ return arr[ index[x] & 0x07 ]; });
-    }
-
 }}}
 
 /*────────────────────────────────────────────────────────────────────────────*/
@@ -316,15 +271,6 @@ namespace nodepp { namespace SIMD { namespace u8 {
 
     inline u8_t select( const u8_t& mask, const u8_t& v_true, const u8_t& v_false ) { 
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) ); 
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=16 >
-    inline u8_t shuffle( const u8_t& A, const u8_t& B, uchar (&index)[N] ) {
-        float arr[32]; memcpy( arr+0, A.value, N * sizeof(uchar_8) );
-                       memcpy( arr+N, B.value, N * sizeof(uchar_8) );
-        return map_u8([&]( int x ){ return arr[ index[x] & 0x07 ]; });
     }
 
 }}}

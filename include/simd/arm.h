@@ -101,7 +101,7 @@ namespace nodepp { namespace SIMD { namespace f64 {
         f64_t out ; vst1q_u64( out.value, mem ); return out;
     }
 
-    inline f64_t bit_not( const f64_t& A ) { return bit_xor( A, cmpeq( f64_t(), f64_t() ) ); }
+    inline f64_t bit_not( const f64_t& A ) { return bit_xor( A, cmpeq( set(0), set(0) ) ); }
 
     /*─······································································─*/
 
@@ -109,15 +109,6 @@ namespace nodepp { namespace SIMD { namespace f64 {
 
     inline f64_t select( const f64_t& mask, const f64_t& v_true, const f64_t& v_false ) {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) );
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=2 >
-    inline f64_t shuffle( const f64_t& A, const f64_t& B, uchar (&index)[N] ) {
-        float arr[4]; memcpy( arr+0, A.value, N * sizeof(uchar_64) );
-                      memcpy( arr+N, B.value, N * sizeof(uchar_64) );
-        return map_u64([&]( int x ){ return arr[ index[x] & 0x07 ]; });
     }
 
 }}}
@@ -222,7 +213,7 @@ namespace nodepp { namespace SIMD { namespace f32 {
         f32_t out ; vst1q_u32( out.value, mem ); return out;
     }
 
-    inline f32_t bit_not( const f32_t& A ) { return bit_xor( A, cmpeq( f32_t(), f32_t() ) ); }
+    inline f32_t bit_not( const f32_t& A ) { return bit_xor( A, cmpeq( set(0), set(0) ) ); }
 
     /*─······································································─*/
 
@@ -230,15 +221,6 @@ namespace nodepp { namespace SIMD { namespace f32 {
 
     inline f32_t select ( const f32_t& mask, const f32_t& v_true, const f32_t& v_false ) {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) );
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=4 >
-    inline f32_t shuffle( const f32_t& A, const f32_t& B, uchar (&index)[N] ) {
-        float arr[8]; memcpy( arr+0, A.value, N * sizeof(uchar_32) );
-                      memcpy( arr+N, B.value, N * sizeof(uchar_32) );
-        return map_u32([&]( int x ){ return arr[ index[x] & 0x07 ]; });
     }
 
 }}}
@@ -349,15 +331,6 @@ namespace nodepp { namespace SIMD { namespace u64 {
     
     inline u64_t cmpeq( const u64_t& A, const u64_t& B ) { 
         return bit_not( bit_xor( cmplt(A,B), cmpgt(A,B) ) );
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=2 >
-    inline u64_t shuffle( const u64_t& A, const u64_t& B, uchar (&index)[N] ) {
-        float arr[4]; memcpy( arr+0, A.value, N * sizeof(uchar_64) );
-                      memcpy( arr+N, B.value, N * sizeof(uchar_64) );
-        return map_u64([&]( int x ){ return arr[ index[x] & 0x07 ]; });
     }
 
 }}}
@@ -479,15 +452,6 @@ namespace nodepp { namespace SIMD { namespace u32 {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) );
     }
 
-    /*─······································································─*/
-
-    template< ulong N=4 >
-    inline u32_t shuffle( const u32_t& A, const u32_t& B, uchar (&index)[N] ) {
-        float arr[8]; memcpy( arr+0, A.value, N * sizeof(uchar_32) );
-                      memcpy( arr+N, B.value, N * sizeof(uchar_32) );
-        return map_u32([&]( int x ){ return arr[ index[x] & 0x07 ]; });
-    }
-
 }}}
 
 /*────────────────────────────────────────────────────────────────────────────*/
@@ -573,7 +537,7 @@ namespace nodepp { namespace SIMD { namespace u16 {
         u16_t out ; vst1q_u16( out.value, mem ); return out;
     }
 
-    inline u8_t bit_shr( const u16_t& A, int shift ) {
+    inline u16_t bit_shr( const u16_t& A, int shift ) {
         auto memA = vld1q_u16( A.value );
         auto mem  = vshrq_u16( memA, shift );
         u16_t out ; vst1q_u16( out.value, mem ); return out;
@@ -608,15 +572,6 @@ namespace nodepp { namespace SIMD { namespace u16 {
 
     inline u16_t select( const u16_t& mask, const u16_t& v_true, const u16_t& v_false ) {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) );
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=8 >
-    inline u16_t shuffle( const u16_t& A, const u16_t& B, uchar (&index)[N] ) {
-        float arr[16]; memcpy( arr+0, A.value, N * sizeof(uchar_16) );
-                       memcpy( arr+N, B.value, N * sizeof(uchar_16) );
-        return map_u16([&]( int x ){ return arr[ index[x] & 0x07 ]; });
     }
 
 }}}
@@ -739,15 +694,6 @@ namespace nodepp { namespace SIMD { namespace u8 {
         auto memA = vld1q_u8( A.value );
         auto mem  = vshrq_u8( memA, shift );
         u8_t out  ; vst1q_u8( out.value, mem ); return out;
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=16 >
-    inline u8_t shuffle( const u8_t& A, const u8_t& B, uchar (&index)[N] ) {
-        float arr[32]; memcpy( arr+0, A.value, N * sizeof(uchar_8) );
-                       memcpy( arr+N, B.value, N * sizeof(uchar_8) );
-        return map_u8([&]( int x ){ return arr[ index[x] & 0x07 ]; });
     }
 
 }}}

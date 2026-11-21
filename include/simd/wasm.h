@@ -101,24 +101,24 @@ namespace nodepp { namespace SIMD { namespace f64 {
         f64_t out ; wasm_v128_store( out.value, mem ); return out;
     }
 
-    inline f64_t bit_not( const f64_t& A ) { return bit_xor( A, cmpeq( f64_t(), f64_t() ) ); }
+    inline f64_t bit_not( const f64_t& A ) { return bit_xor( A, cmpeq( set(0), set(0) ) ); }
 
     /*─······································································─*/
-
-    inline f64_t abs( const f64_t& A ) { return bit_and( A, bit_not( set( -0.0 ) ) ); }
 
     inline f64_t select ( const f64_t& mask, const f64_t& v_true, const f64_t& v_false ) {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) );
     }
 
+    inline f64_t abs( const f64_t& A ) { return bit_and( A, bit_not( set( -0.0 ) ) ); }
+
     /*─······································································─*/
 
-    template< ulong N=2 >
-    inline f64_t shuffle( const f64_t& A, const f64_t& B, uchar (&index)[N] ) {
-        auto memA = wasm_v128_load    ( A.value );
-        auto memB = wasm_v128_load    ( B.value );
-        auto mem  = wasm_f64x2_shuffle( memA, memB, index[0], index[1] );
-        f64_t out ; wasm_v128_store   ( out.value, mem ); return out;
+    inline f64_t min( const f64_t& A, const f64_t& B ) {
+        return select( cmplt( A, B ), A, B );
+    }
+
+    inline f64_t max( const f64_t& A, const f64_t& B ) {
+        return select( cmpgt( A, B ), A, B );
     }
 
 }}}
@@ -223,7 +223,7 @@ namespace nodepp { namespace SIMD { namespace f32 {
         f32_t out ; wasm_v128_store( out.value, mem ); return out;
     }
 
-    inline f32_t bit_not( const f32_t& A ) { return bit_xor( A, cmpeq( f32_t(), f32_t() ) ); }
+    inline f32_t bit_not( const f32_t& A ) { return bit_xor( A, cmpeq( set(0), set(0) ) ); }
 
     /*─······································································─*/
 
@@ -231,18 +231,6 @@ namespace nodepp { namespace SIMD { namespace f32 {
 
     inline f32_t select ( const f32_t& mask, const f32_t& v_true, const f32_t& v_false ) {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) );
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=4 >
-    inline f32_t shuffle( const f32_t& A, const f32_t& B, uchar (&index)[N] ) {
-        auto memA = wasm_v128_load ( A.value );
-        auto memB = wasm_v128_load ( B.value );
-        auto mem  = wasm_f32x4_shuffle( memA, memB, 
-             index[0], index[1] , 
-             index[2], index[3] );
-        f32_t out; wasm_v128_store( out.value, mem ); return out;
     }
 
 }}}
@@ -256,22 +244,6 @@ namespace nodepp { namespace SIMD { namespace u64 {
     inline u64_t set( const uchar_64& value ) { return u64_t({ value, value }); }
 
     inline u64_t get( const u64_t&    value ) { return value; }
-
-    /*─······································································─*/
-
-    inline u64_t min( const u64_t& A, const u64_t& B ) {
-        auto memA = wasm_v128_load ( A.value );
-        auto memB = wasm_v128_load ( B.value );
-        auto mem  = wasm_u64x2_min ( memA, memB );
-        u64_t out ; wasm_v128_store( out.value, mem ); return out;
-    }
-
-    inline u64_t max( const u64_t& A, const u64_t& B ) {
-        auto memA = wasm_v128_load ( A.value );
-        auto memB = wasm_v128_load ( B.value );
-        auto mem  = wasm_u64x2_max ( memA, memB );
-        u64_t out ; wasm_v128_store( out.value, mem ); return out;
-    }
     
     /*─······································································─*/
     
@@ -350,19 +322,19 @@ namespace nodepp { namespace SIMD { namespace u64 {
     inline u64_t cmpgt( const u64_t& A, const u64_t& B ) { 
         return bit_not( sub( bit_and( bit_shr( sub(B,A), 63 ), set(1) ), set(1) ) );
     }
-    
+
     inline u64_t cmpeq( const u64_t& A, const u64_t& B ) { 
         return bit_not( bit_xor( cmplt(A,B), cmpgt(A,B) ) );
     }
 
     /*─······································································─*/
 
-    template< ulong N=2 >
-    inline u64_t shuffle( const u64_t& A, const u64_t& B, uchar (&index)[N] ) {
-        auto memA = wasm_v128_load    ( A.value );
-        auto memB = wasm_v128_load    ( B.value );
-        auto mem  = wasm_u64x2_shuffle( memA, memB, index[0], index[1] );
-        u64_t out; wasm_v128_store( out.value, mem ); return out;
+    inline u64_t min( const u64_t& A, const u64_t& B ) {
+        return select( cmplt( A, B ), A, B );
+    }
+
+    inline u64_t max( const u64_t& A, const u64_t& B ) {
+        return select( cmpgt( A, B ), A, B );
     }
 
 }}}
@@ -482,18 +454,6 @@ namespace nodepp { namespace SIMD { namespace u32 {
 
     inline u32_t select ( const u32_t& mask, const u32_t& v_true, const u32_t& v_false ) {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) );
-    }
-
-    /*─······································································─*/
-
-    template< ulong N=4 >
-    inline u32_t shuffle( const u32_t& A, const u32_t& B, uchar (&index)[N] ) {
-        auto memA = wasm_v128_load    ( A.value );
-        auto memB = wasm_v128_load    ( B.value );
-        auto mem  = wasm_u32x4_shuffle( memA, memB, 
-             index[0], index[1] , 
-             index[2], index[3] );
-        u32_t out; wasm_v128_store( out.value, mem ); return out;
     }
 
 }}}
@@ -618,20 +578,6 @@ namespace nodepp { namespace SIMD { namespace u16 {
         return bit_or( bit_and( mask, v_true ), bit_and( bit_not( mask ), v_false ) );
     }
 
-    /*─······································································─*/
-
-    template< ulong N=8 >
-    inline u16_t shuffle( const u16_t& A, const u16_t& B, uchar (&index)[N] ) {
-        auto memA = wasm_v128_load    ( A.value );
-        auto memB = wasm_v128_load    ( B.value );
-        auto mem  = wasm_u16x8_shuffle( memA, memB, 
-             index[0], index[1] , 
-             index[2], index[3] , 
-             index[4], index[5] , 
-             index[6], index[7] );
-        u16_t out; wasm_v128_store( out.value, mem ); return out;
-    }
-
 }}}
 
 /*────────────────────────────────────────────────────────────────────────────*/
@@ -739,22 +685,6 @@ namespace nodepp { namespace SIMD { namespace u8 {
 
     inline u8_t bit_shl( const u8_t& A, int shift ) { return map_u8([&]( int x ){ return A.value[x] << shift; }); }
     inline u8_t bit_shr( const u8_t& A, int shift ) { return map_u8([&]( int x ){ return A.value[x] >> shift; }); }
-
-    /*─······································································─*/
-
-    template< ulong N=16 >
-    inline u8_t shuffle( const u8_t& A, const u8_t& B, uchar (&index)[N] ) {
-        auto memA = wasm_v128_load    ( A.value );
-        auto memB = wasm_v128_load    ( B.value );
-        auto mem  = wasm_u8x16_shuffle( memA, memB, 
-             index[0] , index[1]  , 
-             index[2] , index[3]  , 
-             index[4] , index[5]  , 
-             index[6] , index[7]  , 
-             index[8] , index[9]  , 
-             index[10], index[11] );
-        u8_t out; wasm_v128_store( out.value, mem ); return out;
-    }
 
 }}}
 

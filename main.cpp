@@ -5,10 +5,11 @@ using namespace nodepp;
 
 void onMain(){
 
-    auto a = SIMD::f32::get({-1 ,-1 ,-1 ,-1  });
-    auto b = SIMD::f32::get({ 40, 30, 20, 10 });
-    auto c = SIMD::f32::mul( a, b );
+    auto a = SIMD::u64::get   ({-10ULL,-10ULL});
+    auto b = SIMD::u64::get   ({-20ULL,-10ULL});
+    auto c = SIMD::u64::cmplt ( a, b );
+    auto d = SIMD::u64::select( c, a, b );
 
-    console::log( c.value[0], c.value[1], c.value[2], c.value[3] );
+    console::log( (char_64) d.value[0], (char_64) d.value[1] );
 
 }
