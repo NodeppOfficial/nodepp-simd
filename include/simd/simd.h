@@ -40,28 +40,21 @@ namespace nodepp { namespace SIMD {
 
 /*────────────────────────────────────────────────────────────────────────────*/
 
-namespace nodepp { namespace SIMD {
-    f64_t map_f64( function_t<double  ,int> cb ){ f64_t out; for( int x=0; x<2 ; x++ ){ out.value[x]=cb(x); } return out; }
-    f32_t map_f32( function_t<float   ,int> cb ){ f32_t out; for( int x=0; x<4 ; x++ ){ out.value[x]=cb(x); } return out; }
-    u64_t map_u64( function_t<uchar_64,int> cb ){ u64_t out; for( int x=0; x<2 ; x++ ){ out.value[x]=cb(x); } return out; }
-    u32_t map_u32( function_t<uchar_32,int> cb ){ u32_t out; for( int x=0; x<4 ; x++ ){ out.value[x]=cb(x); } return out; }
-    u16_t map_u16( function_t<uchar_16,int> cb ){ u16_t out; for( int x=0; x<8 ; x++ ){ out.value[x]=cb(x); } return out; }
-    u8_t  map_u8 ( function_t<uchar_8 ,int> cb ){ u8_t  out; for( int x=0; x<16; x++ ){ out.value[x]=cb(x); } return out; }
-}}
-
-/*────────────────────────────────────────────────────────────────────────────*/
-
 #if SIMD_ENGINE == SIMD_WASM
     #include <emscripten.h>
     #include <wasm_simd128.h>
+    #include "macro.h"
     #include "wasm.h"
 #elif SIMD_ENGINE == SIMD_ARM
     #include <arm_neon.h>
+    #include "macro.h"
     #include "arm.h"
 #elif SIMD_ENGINE == SIMD_X86
     #include <immintrin.h>
+    #include "macro.h"
     #include "x86.h"
 #else
+    #include "macro.h"
     #include "none.h"
 #endif
 
