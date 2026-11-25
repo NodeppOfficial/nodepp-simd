@@ -1,5 +1,16 @@
-#ifndef  NODEPP_NEON_SIMD
-#define  NODEPP_NEON_SIMD
+/*
+ * Copyright 2023 The Nodepp Project Authors. All Rights Reserved.
+ *
+ * Licensed under the MIT (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://github.com/NodeppOfficial/nodepp/blob/main/LICENSE
+ */
+
+/*────────────────────────────────────────────────────────────────────────────*/
+
+#ifndef NODEPP_NEON_SIMD
+#define NODEPP_NEON_SIMD
 
 /*────────────────────────────────────────────────────────────────────────────*/
 
@@ -15,7 +26,7 @@ namespace nodepp { namespace SIMD { namespace f64 {
         double value[4]; memcpy( value+0, A.value, sizeof(double)*2 );
                          memcpy( value+2, B.value, sizeof(double)*2 );
         auto &idx = index.value; return f64_t({ 
-             value[idx[0]], value[idx[1]]
+             value[idx[0]&0x01], value[idx[1]&0x01]
         }); 
     }
 
@@ -137,8 +148,8 @@ namespace nodepp { namespace SIMD { namespace f32 {
         float value[8]; memcpy( value+0, A.value, sizeof(float)*4 );
                         memcpy( value+4, B.value, sizeof(float)*4 );
         auto &idx = index.value; return f32_t({ 
-             value[idx[0]], value[idx[1]], 
-             value[idx[2]], value[idx[3]]
+             value[idx[0]&0x03], value[idx[1]&0x03], 
+             value[idx[2]&0x03], value[idx[3]&0x03]
         }); 
     }
 
@@ -260,7 +271,7 @@ namespace nodepp { namespace SIMD { namespace u64 {
         uchar_64 value[4]; memcpy( value+0, A.value, sizeof(uchar_64)*2 );
                            memcpy( value+2, B.value, sizeof(uchar_64)*2 );
         auto &idx = index.value; return u64_t({ 
-             value[idx[0]], value[idx[1]]
+             value[idx[0]&0x01], value[idx[1]&0x01]
         }); 
     }
 
@@ -380,8 +391,8 @@ namespace nodepp { namespace SIMD { namespace u32 {
         uchar_32 value[8]; memcpy( value+0, A.value, sizeof(uchar_32)*4 );
                            memcpy( value+4, B.value, sizeof(uchar_32)*4 );
         auto &idx = index.value; return u32_t({ 
-             value[idx[0]], value[idx[1]], 
-             value[idx[2]], value[idx[3]]
+             value[idx[0]&0x03], value[idx[1]&0x03], 
+             value[idx[2]&0x03], value[idx[3]&0x03]
         }); 
     }
 
@@ -510,10 +521,10 @@ namespace nodepp { namespace SIMD { namespace u16 {
         uchar_16 value[16]; memcpy( value+0, A.value, sizeof(uchar_16)*8 );
                             memcpy( value+8, B.value, sizeof(uchar_16)*8 );
         auto &idx = index.value; return u16_t({ 
-            value[idx[0]], value[idx[1]], 
-            value[idx[2]], value[idx[3]], 
-            value[idx[4]], value[idx[5]], 
-            value[idx[6]], value[idx[7]] 
+            value[idx[0]&0x0F], value[idx[1]&0x0F], 
+            value[idx[2]&0x0F], value[idx[3]&0x0F], 
+            value[idx[4]&0x0F], value[idx[5]&0x0F], 
+            value[idx[6]&0x0F], value[idx[7]&0x0F] 
         }); 
     }
 
@@ -642,14 +653,14 @@ namespace nodepp { namespace SIMD { namespace u8 {
         uchar_8 value[32]; memcpy( value+0 , A.value, sizeof(uchar_8)*16 );
                            memcpy( value+16, B.value, sizeof(uchar_8)*16 );
         auto &idx = index.value; return u8_t({ 
-            value[idx[0] ], value[idx[1] ], 
-            value[idx[2] ], value[idx[3] ], 
-            value[idx[4] ], value[idx[5] ], 
-            value[idx[6] ], value[idx[7] ],
-            value[idx[8] ], value[idx[9] ], 
-            value[idx[10]], value[idx[11]], 
-            value[idx[12]], value[idx[13]], 
-            value[idx[14]], value[idx[15]] 
+            value[idx[0] &0x1F], value[idx[1] &0x1F], 
+            value[idx[2] &0x1F], value[idx[3] &0x1F], 
+            value[idx[4] &0x1F], value[idx[5] &0x1F], 
+            value[idx[6] &0x1F], value[idx[7] &0x1F],
+            value[idx[8] &0x1F], value[idx[9] &0x1F], 
+            value[idx[10]&0x1F], value[idx[11]&0x1F], 
+            value[idx[12]&0x1F], value[idx[13]&0x1F], 
+            value[idx[14]&0x1F], value[idx[15]&0x1F] 
         }); 
     }
 

@@ -5,11 +5,11 @@ using namespace nodepp;
 
 void onMain(){
 
-    auto a = SIMD::u64::get   ({-10ULL,-10ULL});
-    auto b = SIMD::u64::get   ({-20ULL,-10ULL});
-    auto c = SIMD::u64::cmplt ( a, b );
-    auto d = SIMD::u64::select( c, a, b );
+    auto a = SIMD::f64::get   ({-20, 20 });
+    auto b = SIMD::f64::get   ({ 10, 10 });
+    auto c = SIMD::f64::cmpgt ( a, b );
+    auto d = SIMD::f64::select( c, a, b );
 
-    console::log( (char_64) d.value[0], (char_64) d.value[1] );
+    console::log( ">>", d.value[0], d.value[1] );
 
 }
